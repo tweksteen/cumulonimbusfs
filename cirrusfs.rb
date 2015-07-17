@@ -1,9 +1,9 @@
 require 'fusefs'
 
-class CyberBigDataCloudFS < FuseFS::FuseDir
+class CirrusFS < FuseFS::FuseDir
   def initialize(store, origin)
     @store = store
-    @origin = origin
+    @origin = origin.nil? ? @store.create_root : origin
     puts "Using #{@store.class} from #{@origin}"
   end
 
@@ -128,7 +128,7 @@ class CyberBigDataCloudFS < FuseFS::FuseDir
       puts "New origin: #{dkey}"
     else
       puts "Updating: #{dirname}"
-      update_parent(dirname){ |p, basename| 
+      update_parent(dirname){ |p, basename|
         p[basename] = { key: dkey, type: "D" }
         next p
       }
