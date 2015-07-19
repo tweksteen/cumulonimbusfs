@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+
+require 'fusefs'
+require 'cumulonimbusfs'
+
+if (File.basename($0) == File.basename(__FILE__))
+  store = CumulonimbusFS::PastieKeyValueStore.new
+  root = CumulonimbusFS::CumulonimbusFS.new(store, ARGV[1])
+  FuseFS.set_root(root)
+  FuseFS.mount_under(ARGV[0])
+  FuseFS.run
+end
