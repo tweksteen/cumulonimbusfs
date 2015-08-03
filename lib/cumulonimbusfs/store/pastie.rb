@@ -3,7 +3,7 @@ require 'base64'
 require 'fusefs'
 require 'lru_redux'
 
-require_relative '../textkvs'
+require 'cumulonimbusfs/textkvs'
 
 module CumulonimbusFS
 
@@ -26,11 +26,11 @@ module CumulonimbusFS
     #
     def store(value)
       f = @@form.clone
-      f["paste[body]"] = Base64.encode64(value)
+      f["paste[body]"] = value
       r = Turf::multipart("http://pastie.org/pastes", f)
       r.run
       pastie = r.response.cookies["pasties"]
-      key = r.response["Location"].first.split("/").last
+      key = r.response.headers["Location"].split("/").last
       puts "@store #{pastie}_#{key}"
       pastie + "_" + key
     end
@@ -45,7 +45,7 @@ module CumulonimbusFS
         r = Turf::get("http://pastie.org/pastes/#{pastie}/download?key=#{key}")
         r.run
         #puts "Got:", "="*80, r.response.content, "="*80
-        Base64.decode64(r.response.content)
+        r.response.content
       }
     end
 
