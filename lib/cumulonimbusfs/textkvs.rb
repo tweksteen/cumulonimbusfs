@@ -5,8 +5,7 @@ module CumulonimbusFS
   class TextKeyValueStore
 
     def parse_directory(content)
-      content = Base64.decode64(content)
-      #puts "Parsing directory", content
+      #puts "Parsing directory", content.inspect
       if content.lines.first != "#D\n"
         puts "NOT A DIRECTORY"
       end
@@ -21,20 +20,19 @@ module CumulonimbusFS
       content = files.each.collect { |n, w|
         "#{w[:type]} #{w[:key]} #{n}"
       }.join("\n")
-      Base64.encode64(header + content)
+      header + content
     end
 
     def parse_file(content)
-      content = Base64.decode64(content)
       #puts "Parsing file", content
       if content.lines.first != "#F\n"
         puts "NOT A FILE"
       end
-      content.split("\n", 2).last
+      Base64.decode64(content.split("\n", 2).last)
     end
 
     def gen_file(content)
-      Base64.encode64("#F\n" + content)
+      "#F\n" + Base64.encode64(content)
     end
 
   end
