@@ -1,6 +1,7 @@
 require 'chunky_png'
+require 'date'
 
-require_relative 'textkvs'
+require 'cumulonimbusfs/textkvs'
 
 module CumulonimbusFS
   class ImageKeyValueStore < TextKeyValueStore
@@ -33,17 +34,20 @@ module CumulonimbusFS
 
     def bytes_to_png(bytes)
       size = bytes.bytesize
-      width = Math.sqrt((size.to_f / 4) + 1).ceil
+      width = Math.sqrt((size.to_f / 4) + 1 + 1).ceil # one for the size, one for the padding
       #puts "size=#{size} width=#{width}"
       bytes = pad_content([size].pack("l>") + bytes, 4)
+      #puts "bytes.len=#{bytes.length}"
       png = ChunkyPNG::Image.new(width, width, ChunkyPNG::Color::TRANSPARENT)
-      bytes.chars.each_slice(4).each_with_index { |item, i|
+      bytes.chars.each_slice(4).with_index { |item, i|
         r, c = i / width, i % width
         p = item.join("").unpack("l>").first
         #puts "r=#{r} c=#{c} p=#{p} item=#{item}"
         png[r,c] = p
       }
-      png.to_blob
+      #png.save("#{DateTime.now.strftime('%Q')}.png", :interlace => true)
+      # See upstream bug https://github.com/wvanbergen/chunky_png/issues/94
+      png.to_blob.force_encoding('binary')
     end
 
     def png_to_bytes(blob)
@@ -57,7 +61,7 @@ module CumulonimbusFS
         #puts "r=#{r} c=#{c} i=#{i}"
         content << [png[r,c]].pack("l>")
       }
-      content
+      content[0..size-1]
     end
 
   end
