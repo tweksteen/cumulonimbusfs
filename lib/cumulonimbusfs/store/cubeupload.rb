@@ -3,7 +3,7 @@ require 'fusefs'
 require 'lru_redux'
 require 'json'
 
-require_relative '../imagekvs'
+require 'cumulonimbusfs/imagekvs'
 
 module CumulonimbusFS 
   class CubeUpload < ImageKeyValueStore
@@ -24,9 +24,7 @@ module CumulonimbusFS
       f = @@form.clone
       f["fileinput[0]"] = {content: value, filename: "title.png", type: "image/png"}
       r = Turf::multipart("http://cubeupload.com/upload_json.php", f)
-      puts r
       r.run
-      puts r.response
       key = JSON.parse(r.response.content)['file_name']
       puts "@store #{key}"
       key
@@ -40,8 +38,6 @@ module CumulonimbusFS
         puts "@retrieve #{name}"
         r = Turf::get("http://i.cubeupload.com/#{name}")
         r.run
-        puts r.response
-        #puts "Got:", "="*80, r.response.content, "="*80
         r.response.content
       }
     end
