@@ -1,6 +1,6 @@
 # CumulonimbusFS
 
-A FUSE-based ruby library that may be use to turn any kind of web storage into your own file system. See [thiébaud.fr](http://thiébaud.fr/cumulonimbusfs.html).
+A FUSE-based ruby library that may be use to turn any kind of web storage into your own file system. See [thiébaud.fr](http://xn--thibaud-dya.fr/cumulonimbusfs.html).
 
 ## Installation and Usage
 
