@@ -12,7 +12,7 @@ Same with Cube Upload: `bundle exec ./bin/cubeuploadfs tmp/`
 
 Remount a file system using an origin key: `bundle exec ./bin/pastiefs tmp/ 10326623_kixdlsebnr2oyjltfnkxuw`
 
-# Using EncFS layer
+## Using EncFS layer
 
     mkdir tmp encrypted
     bundle exec ./bin/pastiefs tmp/
